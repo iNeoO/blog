@@ -1,29 +1,25 @@
-import { useUsers } from "./hooks/useUsers";
-import "./App.css";
-import { ROLE } from "common/constants";
+import { useUsers } from './hooks/useUsers';
+import './App.css';
+import { ROLE } from 'common/constants';
 
 function App() {
   const { data, isLoading, isError } = useUsers();
-  console.log(ROLE);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error!</div>;
+
   return (
-    <>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : isError ? (
-        <div>Error!</div>
-      ) : (
-        <div>
-          <h1>Users</h1>
-          <ul>
-            {data?.map((user) => (
-              <li key={user.id}>
-                {user.name} ({user.age})
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </>
+    <div>
+      <h1>Users</h1>
+      <ul>
+        {data?.map((user) => (
+          <li key={user.id}>
+            {user.name} ({user.age}) - {user.role}
+          </li>
+        ))}
+      </ul>
+      <p>Available roles: {Object.values(ROLE).join(', ')}</p>
+    </div>
   );
 }
 
