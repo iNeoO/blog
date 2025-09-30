@@ -14,6 +14,9 @@ importers:
       '@hono/standard-validator':
         specifier: ^0.1.5
         version: 0.1.5(@standard-schema/spec@1.0.0)(hono@4.9.8)
+      '@hono/zod-validator':
+        specifier: ^0.7.3
+        version: 0.7.3(hono@4.9.8)(zod@4.1.11)
       '@scalar/hono-api-reference':
         specifier: ^0.9.19
         version: 0.9.19(hono@4.9.8)
@@ -271,6 +274,12 @@ packages:
     peerDependencies:
       '@standard-schema/spec': 1.0.0
       hono: '>=3.9.0'
+
+  '@hono/zod-validator@0.7.3':
+    resolution: {integrity: sha512-uYGdgVib3RlGD698WR5dVM0zB3UuPY5vHKXffGUbUh7r4xY+mFIhF3/v4AcQVLrU5CQdBso8BJr4wuVoCrjTuQ==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.25.0 || ^4.0.0
 
   '@scalar/core@0.3.17':
     resolution: {integrity: sha512-G6tP+2oorFA90szI8DGiEQ23SmobiuhN93GfTJNpFMhz/kdEtC4lcYawAxL1tWkZhlK/QYRcaCZcVzmpTUgBCA==}
@@ -634,6 +643,11 @@ snapshots:
     dependencies:
       '@standard-schema/spec': 1.0.0
       hono: 4.9.8
+
+  '@hono/zod-validator@0.7.3(hono@4.9.8)(zod@4.1.11)':
+    dependencies:
+      hono: 4.9.8
+      zod: 4.1.11
 
   '@scalar/core@0.3.17':
     dependencies:

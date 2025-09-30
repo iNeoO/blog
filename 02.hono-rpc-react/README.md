@@ -7,6 +7,7 @@ pnpm install
 pnpm run dev
 ```
 
-```
-open http://localhost:3000
+```plaintext
+open http://localhost:5173
+// backend running on http://localhost:3000
 ```
