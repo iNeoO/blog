@@ -1,0 +1,34 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-router": "^1.132.47",
+    "backend": "workspace:^",
+    "common": "workspace:^",
+    "hono": "^4.9.9",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "@tanstack/react-router-devtools": "^1.132.47",
+    "@tanstack/router-plugin": "^1.132.47",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.3",
+    "babel-plugin-react-compiler": "^19.1.0-rc.3",
+    "globals": "^16.4.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.44.0",
+    "vite": "^7.1.9"
+  }
+}
