@@ -13,14 +13,19 @@ export const Route = createFileRoute('/register')({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { mutate: register, isPending, error } = usePostUser();
+  const {
+    mutate: register,
+    isPending,
+    error,
+  } = usePostUser({
+    onSuccess: () => navigate({ to: '/login' }),
+  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await register({ email, password });
-    navigate({ to: '/login' });
+    register({ email, password });
   };
 
   return (

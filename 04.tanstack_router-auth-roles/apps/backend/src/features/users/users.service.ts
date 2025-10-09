@@ -1,4 +1,4 @@
-import { ROLE } from 'common/constants';
+import { ROLE, type RoleValue } from 'common/constants';
 import { getLoggerStore } from '../../utils/asyncLocalStorage.js';
 import { compareHash, hashPassword } from '../../utils/crypt.util.js';
 import type { User } from './user.type.js';
@@ -34,11 +34,13 @@ export const getUsers = () => users.map((user) => ({ id: user.id, email: user.em
 export const createUser = async (email: string, password: string) => {
   const hash = await hashPassword(password);
 
+  const role = users.length === 0 ? ROLE.ADMIN : ROLE.USER;
+
   const newUser = {
     id: (users.length + 1).toString(),
     email,
     password: hash,
-    role: ROLE.USER,
+    role,
   };
 
   const logger = getLoggerStore();
@@ -51,4 +53,25 @@ export const createUser = async (email: string, password: string) => {
     email: newUser.email,
     role: newUser.role,
   };
+};
+
+export const patchUser = async (
+  id: string,
+  { password, email, role }: { password?: string; email?: string; role?: RoleValue },
+) => {
+  const user = users.find((user) => user.id === id);
+  if (!user) {
+    return null;
+  }
+  if (password) {
+    const hash = await hashPassword(password);
+    user.password = hash;
+  }
+  if (email) {
+    user.email = email;
+  }
+  if (role) {
+    user.role = role;
+  }
+  return { id: user.id, email: user.email, role: user.role };
 };

@@ -1,28 +1,22 @@
-import { describeRoute, resolver } from "hono-openapi";
-import {
-  ErrorSchema,
-  ZodSafeParseErrorSchema,
-} from "../../utils/error.schema.js";
-import {
-  UserWithoutPasswordSchema,
-  UsersWithoutPasswordSchema,
-} from "./users.schema.js";
+import { describeRoute, resolver } from 'hono-openapi';
+import { ErrorSchema, ZodSafeParseErrorSchema } from '../../utils/error.schema.js';
+import { UsersWithoutPasswordSchema, UserWithoutPasswordSchema } from './users.schema.js';
 
 export const getUserRoute = describeRoute({
-  tags: ["Users"],
+  tags: ['Users'],
   responses: {
     200: {
-      description: "Retrieve user by ID",
+      description: 'Retrieve user by ID',
       content: {
-        "application/json": {
+        'application/json': {
           schema: resolver(UserWithoutPasswordSchema),
         },
       },
     },
     400: {
-      description: "Error",
+      description: 'Error',
       content: {
-        "application/json": {
+        'application/json': {
           schema: resolver(ErrorSchema),
         },
       },
@@ -31,12 +25,12 @@ export const getUserRoute = describeRoute({
 });
 
 export const getUsersRoute = describeRoute({
-  tags: ["Users"],
+  tags: ['Users'],
   responses: {
     200: {
-      description: "Retrieve users",
+      description: 'Retrieve users',
       content: {
-        "application/json": {
+        'application/json': {
           schema: resolver(UsersWithoutPasswordSchema),
         },
       },
@@ -45,21 +39,51 @@ export const getUsersRoute = describeRoute({
 });
 
 export const postUserRoute = describeRoute({
-  tags: ["Users"],
+  tags: ['Users'],
   responses: {
     201: {
-      description: "User created successfully",
+      description: 'User created successfully',
       content: {
-        "application/json": {
+        'application/json': {
           schema: resolver(UserWithoutPasswordSchema),
         },
       },
     },
     400: {
-      description: "Invalid input",
+      description: 'Invalid input',
       content: {
-        "application/json": {
+        'application/json': {
           schema: resolver(ZodSafeParseErrorSchema),
+        },
+      },
+    },
+  },
+});
+
+export const patchUserRoute = describeRoute({
+  tags: ['Users'],
+  responses: {
+    200: {
+      description: 'User updated successfully',
+      content: {
+        'application/json': {
+          schema: resolver(UserWithoutPasswordSchema),
+        },
+      },
+    },
+    400: {
+      description: 'Invalid input',
+      content: {
+        'application/json': {
+          schema: resolver(ZodSafeParseErrorSchema),
+        },
+      },
+    },
+    404: {
+      description: 'User not found',
+      content: {
+        'application/json': {
+          schema: resolver(ErrorSchema),
         },
       },
     },

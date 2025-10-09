@@ -13,8 +13,10 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthAdminHomeRouteImport } from './routes/_auth/admin/home'
 import { Route as AuthUserHomeRouteImport } from './routes/_auth/_user/home'
+import { Route as AuthAdminUsersIndexRouteImport } from './routes/_auth/admin/users/index'
+import { Route as AuthAdminUsersNewRouteImport } from './routes/_auth/admin/users/new'
+import { Route as AuthAdminUsersUserIdRouteImport } from './routes/_auth/admin/users/$userId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -35,14 +37,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthAdminHomeRoute = AuthAdminHomeRouteImport.update({
-  id: '/admin/home',
-  path: '/admin/home',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const AuthUserHomeRoute = AuthUserHomeRouteImport.update({
   id: '/_user/home',
   path: '/home',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthAdminUsersIndexRoute = AuthAdminUsersIndexRouteImport.update({
+  id: '/admin/users/',
+  path: '/admin/users/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthAdminUsersNewRoute = AuthAdminUsersNewRouteImport.update({
+  id: '/admin/users/new',
+  path: '/admin/users/new',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthAdminUsersUserIdRoute = AuthAdminUsersUserIdRouteImport.update({
+  id: '/admin/users/$userId',
+  path: '/admin/users/$userId',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
@@ -51,14 +63,18 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/home': typeof AuthUserHomeRoute
-  '/admin/home': typeof AuthAdminHomeRoute
+  '/admin/users/$userId': typeof AuthAdminUsersUserIdRoute
+  '/admin/users/new': typeof AuthAdminUsersNewRoute
+  '/admin/users': typeof AuthAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/home': typeof AuthUserHomeRoute
-  '/admin/home': typeof AuthAdminHomeRoute
+  '/admin/users/$userId': typeof AuthAdminUsersUserIdRoute
+  '/admin/users/new': typeof AuthAdminUsersNewRoute
+  '/admin/users': typeof AuthAdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +83,29 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/_auth/_user/home': typeof AuthUserHomeRoute
-  '/_auth/admin/home': typeof AuthAdminHomeRoute
+  '/_auth/admin/users/$userId': typeof AuthAdminUsersUserIdRoute
+  '/_auth/admin/users/new': typeof AuthAdminUsersNewRoute
+  '/_auth/admin/users/': typeof AuthAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/home' | '/admin/home'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/home'
+    | '/admin/users/$userId'
+    | '/admin/users/new'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/home' | '/admin/home'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/home'
+    | '/admin/users/$userId'
+    | '/admin/users/new'
+    | '/admin/users'
   id:
     | '__root__'
     | '/'
@@ -81,7 +113,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/_auth/_user/home'
-    | '/_auth/admin/home'
+    | '/_auth/admin/users/$userId'
+    | '/_auth/admin/users/new'
+    | '/_auth/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -121,13 +155,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/admin/home': {
-      id: '/_auth/admin/home'
-      path: '/admin/home'
-      fullPath: '/admin/home'
-      preLoaderRoute: typeof AuthAdminHomeRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
     '/_auth/_user/home': {
       id: '/_auth/_user/home'
       path: '/home'
@@ -135,17 +162,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthUserHomeRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/admin/users/': {
+      id: '/_auth/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthAdminUsersIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/admin/users/new': {
+      id: '/_auth/admin/users/new'
+      path: '/admin/users/new'
+      fullPath: '/admin/users/new'
+      preLoaderRoute: typeof AuthAdminUsersNewRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/admin/users/$userId': {
+      id: '/_auth/admin/users/$userId'
+      path: '/admin/users/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AuthAdminUsersUserIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
   }
 }
 
 interface AuthRouteRouteChildren {
   AuthUserHomeRoute: typeof AuthUserHomeRoute
-  AuthAdminHomeRoute: typeof AuthAdminHomeRoute
+  AuthAdminUsersUserIdRoute: typeof AuthAdminUsersUserIdRoute
+  AuthAdminUsersNewRoute: typeof AuthAdminUsersNewRoute
+  AuthAdminUsersIndexRoute: typeof AuthAdminUsersIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthUserHomeRoute: AuthUserHomeRoute,
-  AuthAdminHomeRoute: AuthAdminHomeRoute,
+  AuthAdminUsersUserIdRoute: AuthAdminUsersUserIdRoute,
+  AuthAdminUsersNewRoute: AuthAdminUsersNewRoute,
+  AuthAdminUsersIndexRoute: AuthAdminUsersIndexRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(

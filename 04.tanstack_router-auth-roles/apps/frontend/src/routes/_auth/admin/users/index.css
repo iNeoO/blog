@@ -1,0 +1,29 @@
+.admin-container {
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.user-table th,
+.user-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.user-table th {
+  border-bottom: 2px solid #aaa;
+}
+
+.user-table tr:hover {
+  background-color: #f8f8f8;
+}
+
+.error {
+  color: red;
+}

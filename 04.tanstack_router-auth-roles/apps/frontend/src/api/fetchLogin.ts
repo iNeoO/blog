@@ -1,4 +1,4 @@
-import { client } from './hc.ts';
+import { client } from '../lib/hc.ts';
 
 export type PostLoginParams = {
   email: string;

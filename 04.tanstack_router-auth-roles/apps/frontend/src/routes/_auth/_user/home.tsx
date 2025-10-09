@@ -5,13 +5,12 @@ import { useAuth } from '../../../context/auth.context';
 export const Route = createFileRoute('/_auth/_user/home')({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    console.log(context.auth.user);
-    // const allowedRoles = [ROLE.USER];
-    // if (!context.auth.hasAnyRole(allowedRoles)) {
-    //   throw redirect({
-    //     to: '/admin/home',
-    //   });
-    // }
+    const allowedRoles = [ROLE.USER];
+    if (!context.auth.hasAnyRole(allowedRoles)) {
+      throw redirect({
+        to: '/admin/users',
+      });
+    }
   },
 });
 

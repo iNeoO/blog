@@ -1,10 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
-import type { PostLoginParams } from '../api/fetchLogin';
-import { client } from '../api/hc';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { COOKIE_AUTH_NAME } from '../config/cookies.constant';
 import { useLogin, useLogout } from '../hooks/useAuth';
-import { type User, useProfile } from '../hooks/useProfile';
+import type { User } from '../hooks/useProfile';
+import { client } from '../lib/hc';
+
+type PostLoginParams = { email: string; password: string };
 
 export type AuthState = {
   isAuthenticated: boolean;
@@ -12,7 +13,7 @@ export type AuthState = {
   hasRole: (role: string) => boolean;
   hasAnyRole: (roles: string[]) => boolean;
   login: (params: PostLoginParams) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   disconnect: () => void;
 };
 
@@ -37,50 +38,73 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const data = await queryClient.fetchQuery({
           queryKey: ['profile'],
-          queryFn: async () => (await client.profile.me.$get()).json(),
-          staleTime: 5 * 60 * 1000,
+          queryFn: async () => {
+            const res = await client.profile.me.$get();
+            if (!res.ok) throw new Error('Failed to fetch profile');
+            return (await res.json()) as User;
+          },
+          staleTime: 5 * 60_000,
         });
         setUser(data);
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUser(null);
+        queryClient.removeQueries({ queryKey: ['profile'] });
+        console.error('Error fetching profile:', error);
       } finally {
         setIsLoading(false);
       }
     })();
   }, [isAuthenticated, queryClient]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const hasRole = useCallback(
+    (role: string) => {
+      return user?.role === role;
+    },
+    [user?.role],
+  );
 
-  const hasRole = (role: string) => {
-    return user?.role === role;
-  };
+  const hasAnyRole = useCallback(
+    (roles: string[]) => {
+      return !!user?.role && roles.includes(user.role);
+    },
+    [user?.role],
+  );
 
-  const hasAnyRole = (roles: string[]) => {
-    return !!user?.role && roles.includes(user.role);
-  };
+  const login = useCallback(
+    async ({ email, password }: PostLoginParams) => {
+      await loginMutation.mutateAsync({ email, password });
+      const data = await queryClient.fetchQuery({
+        queryKey: ['profile'],
+        queryFn: async () => {
+          const res = await client.profile.me.$get();
+          if (!res.ok) throw new Error('Failed to fetch profile');
+          return (await res.json()) as User;
+        },
+      });
+      queryClient.setQueryData(['profile'], data);
+      setUser(data);
+      setIsAuthenticated(true);
+    },
+    [loginMutation, queryClient],
+  );
 
-  const login = async ({ email, password }: PostLoginParams) => {
-    await loginMutation.mutateAsync({ email, password });
-    const data = await queryClient.fetchQuery({
-      queryKey: ['profile'],
-      queryFn: async () => (await client.profile.me.$get()).json(),
-    });
-    setUser(data as User);
-    setIsAuthenticated(true);
-  };
-
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await logoutMutation.mutateAsync();
     setUser(null);
     setIsAuthenticated(false);
     queryClient.removeQueries({ queryKey: ['profile'] });
-  };
+  }, [logoutMutation, queryClient]);
 
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
     queryClient.removeQueries({ queryKey: ['profile'] });
-  };
+  }, [queryClient]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider
