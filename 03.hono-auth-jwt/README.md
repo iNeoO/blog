@@ -1,6 +1,6 @@
-# Hono RPC react
+# hono-auth-
 
-article on [https://tuturu.io/blog/hono-rpc-react](https://tuturu.io/blog/hono-rpc-react)
+article on [https://tuturu.io/blog/hono-auth-jwt](https://tuturu.io/blog/hono-auth-)
 
 ```bash
 pnpm install
