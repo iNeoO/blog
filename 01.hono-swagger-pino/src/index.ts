@@ -1,8 +1,8 @@
 import { serve } from '@hono/node-server';
 import app from './app.js';
-import { generateSwaggerDocs } from './utils/openAPI.util.js';
+import { setupOpenAPI } from './utils/openAPI.util.js';
 
-await generateSwaggerDocs(app);
+setupOpenAPI(app);
 
 serve(
   {
